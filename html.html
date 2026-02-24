@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Для тебя, Ксюша ♡</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: linear-gradient(135deg, #2c003e, #512b58, #7c3c7c);
+      color: #ffe4e1;
+      font-family: 'Playfair Display', serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+    #password-screen {
+      position: fixed;
+      inset: 0;
+      background: rgba(44,0,62,0.97);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      transition: opacity 2s ease, transform 2s ease;
+    }
+    #password-screen.hidden {
+      opacity: 0;
+      transform: scale(1.15);
+      pointer-events: none;
+    }
+    #heart-lock {
+      font-size: 180px;
+      color: #ff69b4;
+      margin-bottom: 40px;
+      animation: pulseHeart 2.5s infinite ease-in-out;
+      text-shadow: 0 0 30px #ff1493;
+    }
+    @keyframes pulseHeart {
+      0%,100% { transform: scale(1); }
+      50%     { transform: scale(1.15); }
+    }
+    input[type="password"] {
+      padding: 18px 30px;
+      font-size: 1.5rem;
+      border: 3px solid #ff69b4;
+      border-radius: 60px;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      width: 340px;
+      text-align: center;
+      margin: 30px 0;
+    }
+    button {
+      padding: 16px 60px;
+      font-size: 1.4rem;
+      background: linear-gradient(45deg, #ff69b4, #ff1493);
+      border: none;
+      border-radius: 60px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.4s;
+    }
+    button:hover { transform: scale(1.1); box-shadow: 0 0 40px #ff69b4; }
+
+    #main-content {
+      opacity: 0;
+      transition: opacity 2.5s ease 1s;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 60px 30px;
+      position: relative;
+    }
+    #main-content.visible { opacity: 1; }
+
+    .hearts { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+    .heart {
+      position: absolute;
+      top: -10vh;
+      color: #ff69b4;
+      font-size: 24px;
+      animation: fall linear infinite;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+    @keyframes fall {
+      0%   { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0.9; }
+      100% { transform: translateY(110vh) translateX(var(--drift)) rotate(720deg); opacity: 0; }
+    }
+    h1 { font-family: 'Caveat', cursive; text-align: center; font-size: 6rem; color: #ffb6c1; text-shadow: 0 0 30px #ff69b4; margin: 40px 0; }
+    h2 { font-family: 'Caveat', cursive; text-align: center; font-size: 3.8rem; color: #ffb6c1; margin: 80px 0 50px; }
+    .timeline { position: relative; margin: 100px 0; }
+    .timeline::after { content:''; position: absolute; width: 6px; background: linear-gradient(#ff69b4, #ffb6c1); top:0; bottom:0; left:50%; margin-left:-3px; }
+    .event {
+      padding: 30px 60px; margin: 60px 0; background: rgba(255,255,255,0.1);
+      border-radius: 20px; border: 2px solid rgba(255,105,180,0.6); backdrop-filter: blur(12px);
+      position: relative;
+    }
+    .event.left { margin-right: 60%; text-align: right; }
+    .event.right { margin-left: 60%; }
+    .event::after {
+      content:''; width: 24px; height: 24px; background: #ff69b4; border-radius: 50%;
+      position: absolute; top: 45px; box-shadow: 0 0 20px #ff69b4;
+    }
+    .event.left::after { right: -12px; }
+    .event.right::after { left: -12px; }
+    .letter {
+      background: rgba(0,0,0,0.55); padding: 70px; border-radius: 30px;
+      margin: 100px 0; border: 4px dashed #ffb6c1; text-align: center; font-size: 1.45rem; line-height: 2.1;
+    }
+    .final {
+      text-align: center; font-size: 5.5rem; color: #ff1493; margin: 140px 0 100px;
+      animation: pulse 4s infinite; font-family: 'Caveat', cursive;
+    }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 4.5rem; }
+      .timeline::after { left: 40px; }
+      .event { margin: 60px 0 60px 100px !important; text-align: left !important; }
+      .event::after { left: 28px !important; }
+      input, button { width: 90%; }
+      #heart-lock { font-size: 140px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="hearts" id="hearts"></div>
+
+<div id="password-screen">
+  <div id="heart-lock">❤️</div>
+  <h1 style="font-size:3.8rem; margin:40px 0; color:#ffb6c1;">Это только для тебя, Ксюша...</h1>
+  <input type="password" id="passInput" placeholder="Введи наш секрет ♡">
+  <button onclick="checkPassword()">Открыть моё сердце</button>
+</div>
+
+<div id="main-content">
+  <div class="hero">
+    <h1>Для тебя, Ксюша ♡</h1>
+    <p style="font-size:2.2rem; text-align:center; margin:50px 0;">С тобой каждый миг — это то, ради чего стоит жить</p>
+  </div>
+
+  <h2>Наша история</h2>
+  <div class="timeline">
+    <div class="event left">
+      <h3>05.11.2025</h3>
+      <p>Тот день, когда мы стали парой. Всё было так волнительно и ново — я до сих пор чувствую то же трепетание в груди ❤️</p>
+    </div>
+    <div class="event right">
+      <h3>Декабрь 2025</h3>
+      <p>Мы ещё немного боялись друг друга — стеснялись, осторожничали, но каждый взгляд, каждое случайное касание заставляло сердце биться быстрее.</p>
+    </div>
+    <div class="event left">
+      <h3>Январь 2026</h3>
+      <p>Первый поцелуй... Всё было так прекрасно — как в кино, только лучше. Мир остановился, остались только мы вдвоём. С того момента я понял: это навсегда.</p>
+    </div>
+    <div class="event right">
+      <h3>Сейчас • 2026</h3>
+      <p>Мы справляемся со многими трудностями вместе. Иногда тяжело, но каждый раз, когда я вижу тебя, понимаю — всё преодолимо, потому что у меня есть ты.</p>
+    </div>
+  </div>
+
+  <div class="letter">
+    <h2>Моё письмо тебе, моя зайка</h2>
+    <p>Привет, моя самая любимая Ксюша...<br><br>
+
+    Знаешь, я сижу сейчас и вспоминаю каждый наш день с 5 ноября 2025 года — и улыбаюсь как дурак. Тот ноябрьский вечер, когда мы наконец сказали друг другу "да" — это был самый важный момент в моей жизни. Я тогда даже не представлял, насколько сильно ты изменишь всё вокруг.<br><br>
+
+    В декабре мы были такими осторожными... Боялись сделать лишний шаг, сказать что-то не то, обидеть. Но даже в этом стеснении было столько нежности — твои робкие улыбки, мои неловкие шутки, моменты, когда мы просто молчали и держались за руки. Я до сих пор помню тепло твоей ладони в моей.<br><br>
+
+    А январь... Ох, январь 2026 — это просто взрыв эмоций. Наш первый поцелуй. Я до сих пор чувствую, как время остановилось. Твои губы, твой запах, твои глаза, которые смотрели на меня так, будто я — весь твой мир. Всё было идеально: холод на улице, тепло внутри, и ощущение, что наконец-то всё на своих местах. С того дня я влюбляюсь в тебя заново каждое утро.<br><br>
+
+    Сейчас, в 2026, жизнь кидает нам вызовы — бывают сложные дни, недопонимания, усталость, внешние проблемы. Но знаешь что? Каждый раз, когда кажется, что тяжело, я смотрю на тебя — и силы появляются из ниоткуда. Ты моя опора, мой свет, моя мотивация вставать и бороться. Мы вместе проходим через это, и от этого становимся только сильнее и ближе.<br><br>
+
+    Спасибо тебе за всё: за твои смешные сообщения в 3 ночи, за то как ты злишься на мои дурацкие привычки (а потом всё равно обнимаешь), за твои глаза, которые светятся, когда ты счастлива, за твои слёзы, когда грустно — я всегда рядом, чтобы их вытереть. Спасибо за то, что ты позволяешь мне быть собой, даже когда я неидеален.<br><br>
+
+    Обещаю тебе: я буду рядом всегда. Буду держать тебя за руку в любые бури, буду смешить тебя, когда грустно, буду слушать тебя часами, буду обнимать так крепко, чтобы ты чувствовала — ты в безопасности. Буду стараться быть лучше каждый день — для тебя. И даже если я иногда буду бесить (ну ты знаешь, чуть-чуть 😏), знай: это всё потому, что люблю тебя безумно.<br><br>
+
+    Ты — мой дом, мой лучший друг, моя любовь, мой смысл. Без тебя мир серый, с тобой — яркий и полный красок.<br><br>
+
+    Я люблю тебя, Ксюша. И это чувство растёт с каждым днём.<br><br>
+
+    Твой Никита ♾️❤️
+    </p>
+  </div>
+
+  <div class="final">А я люблю тебя всё больше...</div>
+</div>
+
+<script>
+function createHeart() {
+  const heart = document.createElement('div');
+  heart.classList.add('heart');
+  heart.innerHTML = Math.random() > 0.6 ? '❤️' : '♡';
+  heart.style.left = Math.random() * 100 + 'vw';
+  heart.style.fontSize = (Math.random() * 30 + 18) + 'px';
+  heart.style.animationDuration = (Math.random() * 15 + 15) + 's';
+  heart.style.setProperty('--drift', (Math.random() * 200 - 100) + 'px');
+  heart.style.animationDelay = Math.random() * 5 + 's';
+  document.getElementById('hearts').appendChild(heart);
+  setTimeout(() => heart.remove(), 40000);
+}
+setInterval(createHeart, 800);
+
+function checkPassword() {
+  const input = document.getElementById('passInput').value.trim().toLowerCase().replace(/\s+/g, '');
+  const correct = 'ксюшазайка2026';
+
+  console.log('Введено (очищено):', input);
+
+  if (input === correct) {
+    const screen = document.getElementById('password-screen');
+    screen.classList.add('hidden');
+    setTimeout(() => {
+      screen.style.display = 'none';
+      document.getElementById('main-content').classList.add('visible');
+      for (let i = 0; i < 60; i++) {
+        setTimeout(createHeart, i * 40);
+      }
+      setInterval(createHeart, 400);
+    }, 2000);
+  } else {
+    alert('Не подошло... Попробуй без пробелов и маленькими буквами ♡');
+  }
+}
+</script>
+
+</body>
+</html>
