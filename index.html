@@ -17,7 +17,7 @@
       overflow-x: hidden;
       position: relative;
     }
-    #password-screen {
+    #intro-screen {
       position: fixed;
       inset: 0;
       background: rgba(44,0,62,0.97);
@@ -26,50 +26,43 @@
       align-items: center;
       justify-content: center;
       z-index: 100;
-      transition: opacity 2s ease, transform 2s ease;
+      transition: opacity 1.8s ease, transform 1.8s ease;
     }
-    #password-screen.hidden {
+    #intro-screen.hidden {
       opacity: 0;
-      transform: scale(1.15);
+      transform: scale(1.1);
       pointer-events: none;
     }
-    #heart-lock {
-      font-size: 180px;
+    #heart-intro {
+      font-size: 220px;
       color: #ff69b4;
-      margin-bottom: 40px;
-      animation: pulseHeart 2.5s infinite ease-in-out;
-      text-shadow: 0 0 30px #ff1493;
+      margin-bottom: 30px;
+      animation: pulseHeart 2.8s infinite ease-in-out;
+      text-shadow: 0 0 40px #ff1493;
     }
     @keyframes pulseHeart {
       0%,100% { transform: scale(1); }
-      50%     { transform: scale(1.15); }
-    }
-    input[type="password"] {
-      padding: 18px 30px;
-      font-size: 1.5rem;
-      border: 3px solid #ff69b4;
-      border-radius: 60px;
-      background: rgba(255,255,255,0.1);
-      color: #fff;
-      width: 340px;
-      text-align: center;
-      margin: 30px 0;
+      50%     { transform: scale(1.18); }
     }
     button {
-      padding: 16px 60px;
-      font-size: 1.4rem;
+      padding: 20px 80px;
+      font-size: 1.8rem;
       background: linear-gradient(45deg, #ff69b4, #ff1493);
       border: none;
-      border-radius: 60px;
+      border-radius: 80px;
       color: white;
       cursor: pointer;
-      transition: all 0.4s;
+      transition: all 0.5s;
+      box-shadow: 0 0 30px rgba(255,105,180,0.6);
+      font-family: 'Caveat', cursive;
     }
-    button:hover { transform: scale(1.1); box-shadow: 0 0 40px #ff69b4; }
-
+    button:hover {
+      transform: scale(1.12);
+      box-shadow: 0 0 60px #ff69b4;
+    }
     #main-content {
       opacity: 0;
-      transition: opacity 2.5s ease 1s;
+      transition: opacity 2.2s ease 0.8s;
       max-width: 1100px;
       margin: 0 auto;
       padding: 60px 30px;
@@ -123,8 +116,8 @@
       .timeline::after { left: 40px; }
       .event { margin: 60px 0 60px 100px !important; text-align: left !important; }
       .event::after { left: 28px !important; }
-      input, button { width: 90%; }
-      #heart-lock { font-size: 140px; }
+      button { padding: 18px 60px; font-size: 1.6rem; }
+      #heart-intro { font-size: 160px; }
     }
   </style>
 </head>
@@ -132,13 +125,14 @@
 
 <div class="hearts" id="hearts"></div>
 
-<div id="password-screen">
-  <div id="heart-lock">❤️</div>
-  <h1 style="font-size:3.8rem; margin:40px 0; color:#ffb6c1;">Это только для тебя, Ксюша...</h1>
-  <input type="password" id="passInput" placeholder="Введи наш секрет ♡">
-  <button onclick="checkPassword()">Открыть моё сердце</button>
+<!-- Экран с кнопкой -->
+<div id="intro-screen">
+  <div id="heart-intro">❤️</div>
+  <h1 style="font-size:3.8rem; margin:30px 0; color:#ffb6c1;">Это только для тебя, Ксюша...</h1>
+  <button onclick="openGift()">Открыть подарок ♡</button>
 </div>
 
+<!-- Основной контент (скрыт сначала) -->
 <div id="main-content">
   <div class="hero">
     <h1>Для тебя, Ксюша ♡</h1>
@@ -193,6 +187,7 @@
 </div>
 
 <script>
+// Падающие сердца
 function createHeart() {
   const heart = document.createElement('div');
   heart.classList.add('heart');
@@ -207,28 +202,21 @@ function createHeart() {
 }
 setInterval(createHeart, 800);
 
-function checkPassword() {
-  const input = document.getElementById('passInput').value.trim().toLowerCase().replace(/\s+/g, '');
-  const correct = 'ксюшазайка2026';
-
-  console.log('Введено (очищено):', input);
-
-  if (input === correct) {
-    const screen = document.getElementById('password-screen');
-    screen.classList.add('hidden');
-    setTimeout(() => {
-      screen.style.display = 'none';
-      document.getElementById('main-content').classList.add('visible');
-      for (let i = 0; i < 60; i++) {
-        setTimeout(createHeart, i * 40);
-      }
-      setInterval(createHeart, 400);
-    }, 2000);
-  } else {
-    alert('Не подошло... Попробуй без пробелов и маленькими буквами ♡');
-  }
+// Открытие подарка по кнопке
+function openGift() {
+  const screen = document.getElementById('intro-screen');
+  screen.classList.add('hidden');
+  setTimeout(() => {
+    screen.style.display = 'none';
+    document.getElementById('main-content').classList.add('visible');
+    // burst сердечек
+    for (let i = 0; i < 60; i++) {
+      setTimeout(createHeart, i * 40);
+    }
+    setInterval(createHeart, 400);
+  }, 1800);
 }
 </script>
 
 </body>
-</html>
+  </html>
