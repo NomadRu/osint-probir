@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Пробив по фото | OSINT</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Пробив по фото (Reverse Image)</h1>
+    <p>Загружай фото в инструменты ниже — найдут оригиналы, лица, похожие</p>
+  </header>
+
+  <main>
+    <a href="index.html" class="back-btn">← Назад в меню</a>
+
+    <div class="search-box">
+      <p>Выбери инструмент и загрузи фото (URL или файл):</p>
+    </div>
+
+    <ul id="results"></ul>
+  </main>
+
+  <footer>
+    <p>Создано @pytin_legend • Только открытые данные</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    const platforms = [
+      { name: "Yandex Images (лучший для лиц/РФ)", base: "https://yandex.ru/images/", type: "upload", has: true },
+      { name: "Google Lens (очень мощный)", base: "https://lens.google.com/", type: "upload", has: true },
+      { name: "TinEye (поиск оригиналов)", base: "https://tineye.com/", type: "upload", has: true },
+      { name: "Bing Visual Search", base: "https://www.bing.com/images/visualsearch", type: "upload", has: true },
+      { name: "FaceCheck.ID (поиск лиц free)", base: "https://facecheck.id/", type: "upload", has: true },
+      { name: "PimEyes (preview бесплатно)", base: "https://pimeyes.com/", type: "upload", has: true },
+      { name: "Lenso.ai (AI поиск)", base: "https://lenso.ai/", type: "upload", has: false },
+      { name: "SauceNAO (аниме/арт/фото)", base: "https://saucenao.com/", type: "upload", has: true }
+    ];
+
+    function runSearch() {
+      const list = document.getElementById('results');
+      list.innerHTML = '';
+
+      platforms.forEach(p => {
+        const url = p.base;
+        const item = generateResultItem(p.name, url, p.has ? 'Есть инфа (загружай фото)' : 'Проверить', p.has);
+        list.appendChild(item);
+      });
+    }
+
+    window.onload = runSearch;
+  </script>
+</body>
+</html>

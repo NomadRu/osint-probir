@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Пробив по IP | OSINT</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Пробив по IP-адресу</h1>
+    <p>Геолокация, ISP, прокси/VPN, ASN (бесплатные инструменты)</p>
+  </header>
+
+  <main>
+    <a href="index.html" class="back-btn">← Назад в меню</a>
+
+    <div class="search-box">
+      <input type="text" id="input" placeholder="8.8.8.8 или 2001:4860:4860::8888">
+      <button onclick="runSearch()">Запустить</button>
+    </div>
+
+    <ul id="results"></ul>
+  </main>
+
+  <footer>
+    <p>Создано @pytin_legend • Только открытые данные • 2026</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    const platforms = [
+      { name: "IP-API.com (без ключа, быстро, город/страна/ISP)", base: "https://ip-api.com/json/", type: "api", has: true },
+      { name: "ipapi.co (без ключа, JSON с городом/регионом/валютой)", base: "https://ipapi.co/", type: "api", has: true },
+      { name: "FreeIPAPI.com (без ключа, неограниченно)", base: "https://freeipapi.com/api/json/", type: "api", has: true },
+      { name: "IPGeolocation.io (free tier, точный город)", base: "https://api.ipgeolocation.io/ipgeo?apiKey=free&ip=", type: "api", has: true },
+      { name: "IPinfo.io Lite (без ключа для country/ASN)", base: "https://ipinfo.io/", type: "api", has: true },
+      { name: "BigDataCloud IP Lookup (детальный, карта)", base: "https://www.bigdatacloud.com/ip-lookup", type: "web", has: true },
+      { name: "KeyCDN IP Location Finder (GeoLite2)", base: "https://tools.keycdn.com/geo", type: "web", has: true },
+      { name: "IPLocation.io (простой чекер)", base: "https://iplocation.io/", type: "web", has: true },
+      { name: "IP2Location Free Lookup", base: "https://lite.ip2location.com/ip2location-lite", type: "web", has: false },
+      { name: "Google Dorks по IP", base: "https://www.google.com/search?q=", type: "search", query: 'site:whois.arin.net "{input}" OR "{input}" IP geolocation', has: false }
+    ];
+
+    function runSearch() {
+      const val = document.getElementById('input').value.trim();
+      if (!val) return alert('Введи IP-адрес');
+
+      const list = document.getElementById('results');
+      list.innerHTML = '';
+
+      platforms.forEach(p => {
+        let url = p.base;
+        if (p.type === 'api') {
+          url += encodeURIComponent(val);
+        } else if (p.query) {
+          url += encodeURIComponent(p.query.replace('{input}', val));
+        } else {
+          url += encodeURIComponent(val);
+        }
+
+        const hasInfoText = p.has ? 'Есть инфа (гео/ISP)' : 'Проверить вручную';
+        const isYes = p.has;
+
+        const item = generateResultItem(p.name, url, hasInfoText, isYes);
+        list.appendChild(item);
+      });
+    }
+  </script>
+</body>
+</html>

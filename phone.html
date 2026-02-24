@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Пробив номера | OSINT</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Пробив по номеру телефона</h1>
+    <p>Оператор, регион РФ</p>
+  </header>
+
+  <main>
+    <a href="index.html" class="back-btn">← Назад в меню</a>
+
+    <div class="search-box">
+      <input type="text" id="input" placeholder="+79123456789">
+      <button onclick="runSearch()">Запустить</button>
+    </div>
+
+    <ul id="results"></ul>
+  </main>
+
+  <footer>
+    <p>Создано @pytin_legend • Только открытые данные</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    const platforms = [
+      { name: "Epieos (Telegram, VK, Google связи)", base: "https://epieos.com/", type: "search", has: true },
+      { name: "Who-Called.ru (Россия, регион + оператор)", base: "https://who-called.ru/", type: "search", has: true },
+      { name: "Zvonili.com (Россия, отзывы + регион)", base: "https://zvonili.com/", type: "search", has: true },
+      { name: "Nomer.org (Россия, поиск по номеру)", base: "https://nomer.org/", type: "search", has: true },
+      { name: "ThisNumber Russia", base: "https://www.thisnumber.com/ru", type: "search", has: true },
+      { name: "Emobiletracker Russia", base: "https://www.emobiletracker.com/free-trace-russia.html", type: "search", has: true },
+      { name: "NumLookup (международный + США)", base: "https://www.numlookup.com/", type: "search", has: false },
+      { name: "Truecaller Web (регион/оператор)", base: "https://www.truecaller.com/reverse-phone-number-lookup", type: "search", has: false },
+      { name: "Google Dorks Россия", base: "https://www.google.com/search?q=", type: "search", query: '"+{input}" Россия OR Москва OR СПб OR оператор OR МТС OR Билайн OR Мегафон', has: false },
+      { name: "Коды операторов РФ (справочник)", base: "https://www.rossvyaz.gov.ru/activity/numbering_resources/abc/", type: "info", has: true }
+    ];
+
+    function runSearch() {
+      const val = document.getElementById('input').value.trim();
+      if (!val) return alert('Введи номер');
+
+      const list = document.getElementById('results');
+      list.innerHTML = '';
+
+      platforms.forEach(p => {
+        let url = p.base;
+        if (p.query) url += encodeURIComponent(p.query.replace('{input}', val));
+        else url += encodeURIComponent(val);
+
+        const item = generateResultItem(p.name, url, p.has ? 'Есть инфа' : 'Проверить', p.has);
+        list.appendChild(item);
+      });
+    }
+  </script>
+</body>
+</html>
