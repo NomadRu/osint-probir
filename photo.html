@@ -8,15 +8,15 @@
 </head>
 <body>
   <header>
-    <h1>Пробив по фото (Reverse Image)</h1>
-    <p>Загружай фото в инструменты ниже — найдут оригиналы, лица, похожие</p>
+    <h1>ПРОБИВ ПО ФОТО</h1>
+    <p>Reverse image search — найди оригинал или похожие лица</p>
   </header>
 
   <main>
-    <a href="index.html" class="back-btn">← Назад в меню</a>
+    <a href="index.html" class="back-btn">← Назад</a>
 
     <div class="search-box">
-      <p>Выбери инструмент и загрузи фото (URL или файл):</p>
+      <p>Загружай фото в любой из сервисов ниже:</p>
     </div>
 
     <ul id="results"></ul>
@@ -29,14 +29,14 @@
   <script src="script.js"></script>
   <script>
     const platforms = [
-      { name: "Yandex Images (лучший для лиц/РФ)", base: "https://yandex.ru/images/", type: "upload", has: true },
-      { name: "Google Lens (очень мощный)", base: "https://lens.google.com/", type: "upload", has: true },
-      { name: "TinEye (поиск оригиналов)", base: "https://tineye.com/", type: "upload", has: true },
-      { name: "Bing Visual Search", base: "https://www.bing.com/images/visualsearch", type: "upload", has: true },
-      { name: "FaceCheck.ID (поиск лиц free)", base: "https://facecheck.id/", type: "upload", has: true },
-      { name: "PimEyes (preview бесплатно)", base: "https://pimeyes.com/", type: "upload", has: true },
-      { name: "Lenso.ai (AI поиск)", base: "https://lenso.ai/", type: "upload", has: false },
-      { name: "SauceNAO (аниме/арт/фото)", base: "https://saucenao.com/", type: "upload", has: true }
+      { name: "Yandex Images — лучший для России и лиц", url: "https://yandex.ru/images/" },
+      { name: "Google Lens — очень мощный поиск", url: "https://lens.google.com/" },
+      { name: "TinEye — ищет точные совпадения", url: "https://tineye.com/" },
+      { name: "Bing Visual Search", url: "https://www.bing.com/images/visualsearch" },
+      { name: "FaceCheck.ID — поиск по лицам (free)", url: "https://facecheck.id/" },
+      { name: "PimEyes — поиск лиц (бесплатный просмотр)", url: "https://pimeyes.com/" },
+      { name: "Lenso.ai — AI поиск по категориям", url: "https://lenso.ai/" },
+      { name: "SauceNAO — для арта, аниме, фото", url: "https://saucenao.com/" }
     ];
 
     function runSearch() {
@@ -44,9 +44,12 @@
       list.innerHTML = '';
 
       platforms.forEach(p => {
-        const url = p.base;
-        const item = generateResultItem(p.name, url, p.has ? 'Есть инфа (загружай фото)' : 'Проверить', p.has);
-        list.appendChild(item);
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <a href="${p.url}" target="_blank" class="link">${p.name}</a>
+          <button class="copy-btn" onclick="copyText('${p.url}')">Копировать ссылку</button>
+        `;
+        list.appendChild(li);
       });
     }
 
