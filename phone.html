@@ -3,126 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Пробив номера | OSINT</title>
+  <title>ПРОБИВ НОМЕРА</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>ПРОБИВ НОМЕРА ТЕЛЕФОНА</h1>
-    <p>Регион РФ + оператор (по префиксу 9xx)</p>
-  </header>
+  <pre>
+  ╔════════════════════════════════════════╗
+  ║        ПРОБИВ НОМЕРА ТЕЛЕФОНА          ║
+  ║   Регион РФ + оператор по префиксу     ║
+  ╚════════════════════════════════════════╝
 
-  <main>
-    <a href="index.html" class="back-btn">← Назад</a>
+  Введите номер (например +79161234567 или 9161234567):
 
-    <div class="search-box">
-      <input type="text" id="input" placeholder="+7 9XX XXX XX XX или 79XXXXXXXXX">
-      <button onclick="runSearch()">Пробить</button>
-    </div>
+  <div class="search-box">
+    <input type="text" id="input" placeholder="+79161234567">
+    <button onclick="runSearch()">ПРОБИТЬ</button>
+  </div>
 
-    <ul id="results"></ul>
+  <ul id="results"></ul>
 
-    <div style="margin-top:30px; color:#0f03;">
-      <p>Как работает: по первым 3–4 цифрам после +7 определяется регион и оператор.</p>
-      <p>Примеры префиксов: 916,925 — Москва/Мегафон, 901 — МТС, 903 — Билайн и т.д.</p>
-      <p>Для точности используй сервисы ниже.</p>
-    </div>
-  </main>
+  <a href="index.html" class="back">← ВЕРНУТЬСЯ В МЕНЮ</a>
 
-  <footer>
-    <p>Создано @pytin_legend • Только открытые данные</p>
-  </footer>
+  <div style="margin-top:20px; color:#004400;">
+  Примеры:
+  916, 925, 926, 929 — Москва / МО (Мегафон)
+  903, 905, 906, 909 — Москва / МО (Билайн)
+  910–919 — Мегафон разные регионы
+  901, 958, 965–969 — МТС Москва
+  950–953 — Tele2 разные регионы
+  </div>
+  </pre>
 
-  <script src="script.js"></script>
   <script>
-    const operators = {
-      '900': { operator: 'МТС', regions: 'Москва и МО, некоторые регионы' },
-      '901': { operator: 'МТС', regions: 'Москва, СПб, регионы' },
-      '902': { operator: 'МТС / Мегафон / Билайн', regions: 'Разные регионы' },
-      '903': { operator: 'Билайн', regions: 'Москва и МО' },
-      '904': { operator: 'Билайн / МТС / Tele2', regions: 'Регионы' },
-      '905': { operator: 'Билайн', regions: 'Москва и МО' },
-      '906': { operator: 'Билайн', regions: 'Москва и МО' },
-      '908': { operator: 'Билайн / МТС', regions: 'Разные' },
-      '909': { operator: 'Билайн / МТС', regions: 'Москва и МО' },
-      '910': { operator: 'Мегафон', regions: 'Центр России' },
-      '911': { operator: 'Мегафон', regions: 'СПб и ЛО' },
-      '912': { operator: 'Мегафон', regions: 'Урал' },
-      '913': { operator: 'Мегафон', regions: 'Сибирь' },
-      '914': { operator: 'Мегафон', regions: 'Дальний Восток' },
-      '915': { operator: 'Мегафон', regions: 'Москва и МО' },
-      '916': { operator: 'Мегафон', regions: 'Москва и МО' },
-      '917': { operator: 'Мегафон', regions: 'Москва и регионы' },
-      '918': { operator: 'Мегафон', regions: 'Юг России' },
-      '919': { operator: 'Мегафон', regions: 'Центр и Юг' },
-      '920': { operator: 'Мегафон', regions: 'Центр России' },
-      '921': { operator: 'Мегафон', regions: 'СПб и ЛО' },
-      '925': { operator: 'Мегафон', regions: 'Москва и МО' },
-      '926': { operator: 'Мегафон', regions: 'Москва и МО' },
-      '927': { operator: 'Мегафон', regions: 'Поволжье' },
-      '928': { operator: 'Мегафон', regions: 'Юг России' },
-      '929': { operator: 'Мегафон', regions: 'Москва' },
-      '930': { operator: 'Мегафон / Tele2', regions: 'Разные' },
-      '931': { operator: 'Мегафон', regions: 'СПб' },
-      '936': { operator: 'Мегафон', regions: 'Москва' },
-      '950': { operator: 'Tele2', regions: 'Разные' },
-      '951': { operator: 'Tele2', regions: 'Урал' },
-      '952': { operator: 'Tele2', regions: 'Сибирь' },
-      '953': { operator: 'Tele2', regions: 'СПб' },
-      '958': { operator: 'МТС', regions: 'Разные' },
-      '960': { operator: 'МТС', regions: 'Центр' },
-      '961': { operator: 'МТС', regions: 'Поволжье' },
-      '962': { operator: 'МТС', regions: 'Юг' },
-      '963': { operator: 'МТС', regions: 'Центр' },
-      '964': { operator: 'МТС', regions: 'Дальний Восток' },
-      '965': { operator: 'МТС', regions: 'Москва' },
-      '966': { operator: 'МТС', regions: 'Москва' },
-      '967': { operator: 'МТС', regions: 'Москва' },
-      '968': { operator: 'МТС', regions: 'Москва' },
-      '969': { operator: 'МТС', regions: 'Москва' }
-      // можно добавить ещё много
+    const prefixes = {
+      '900': { op: 'МТС', reg: 'Москва и МО, разные регионы' },
+      '901': { op: 'МТС', reg: 'Москва, СПб, регионы' },
+      '903': { op: 'Билайн', reg: 'Москва и МО' },
+      '905': { op: 'Билайн', reg: 'Москва и МО' },
+      '906': { op: 'Билайн', reg: 'Москва и МО' },
+      '909': { op: 'Билайн/МТС', reg: 'Москва и МО' },
+      '910': { op: 'Мегафон', reg: 'Центр России' },
+      '911': { op: 'Мегафон', reg: 'СПб и ЛО' },
+      '915': { op: 'Мегафон', reg: 'Москва и МО' },
+      '916': { op: 'Мегафон', reg: 'Москва и МО' },
+      '917': { op: 'Мегафон', reg: 'Москва и регионы' },
+      '918': { op: 'Мегафон', reg: 'Юг России' },
+      '919': { op: 'Мегафон', reg: 'Центр и Юг' },
+      '925': { op: 'Мегафон', reg: 'Москва и МО' },
+      '926': { op: 'Мегафон', reg: 'Москва и МО' },
+      '929': { op: 'Мегафон', reg: 'Москва' },
+      '958': { op: 'МТС', reg: 'Разные регионы' },
+      '965': { op: 'МТС', reg: 'Москва' },
+      '966': { op: 'МТС', reg: 'Москва' },
+      '967': { op: 'МТС', reg: 'Москва' },
+      '968': { op: 'МТС', reg: 'Москва' },
+      '969': { op: 'МТС', reg: 'Москва' },
+      // Добавь ещё, если нужно
     };
 
     function runSearch() {
-      const val = document.getElementById('input').value.trim().replace(/\D/g, '');
-      if (val.length < 10) return alert('Введи нормальный номер (10–11 цифр после +7)');
+      let num = document.getElementById('input').value.replace(/\D/g, '');
+      if (num.startsWith('7') || num.startsWith('8')) num = num.slice(1);
+      if (num.startsWith('9') && num.length >= 10) num = num.slice(0,10);
 
-      const prefix = val.slice(-10, -7); // последние 10 цифр → берём 3 после 7 или 9
-      const results = document.getElementById('results');
-      results.innerHTML = '';
+      const res = document.getElementById('results');
+      res.innerHTML = '';
 
       let found = false;
 
-      for (let key in operators) {
-        if (val.includes(key)) {
-          const op = operators[key];
+      for (let pre in prefixes) {
+        if (num.startsWith(pre)) {
+          const info = prefixes[pre];
           const li = document.createElement('li');
-          li.innerHTML = `
-            <span style="font-weight:bold; min-width:120px;">${key}</span>
-            <span style="flex:1;">Оператор: ${op.operator}</span>
-            <span style="flex:1;">Регион: ${op.regions}</span>
-          `;
-          results.appendChild(li);
+          li.innerHTML = `Префикс ${pre} → Оператор: ${info.op} | Регион: ${info.reg}`;
+          res.appendChild(li);
           found = true;
         }
       }
 
       if (!found) {
-        results.innerHTML = '<li style="color:#0f03;">Префикс не найден. Попробуй другой номер или используй сервисы ниже.</li>';
+        res.innerHTML = '<li>Префикс не распознан. Введи номер начиная с 9xx...</li>';
       }
-
-      // Добавляем ссылки на проверку
-      const extra = document.createElement('li');
-      extra.innerHTML = `
-        <span style="font-weight:bold;">Дополнительно проверить:</span>
-        <a href="https://epieos.com/" target="_blank" class="link">Epieos (Telegram/VK связи)</a>
-        <button class="copy-btn" onclick="copyText('https://epieos.com/')">Копировать</button>
-      `;
-      results.appendChild(extra);
-    }
-
-    function copyText(text) {
-      navigator.clipboard.writeText(text).then(() => alert('Скопировано!'));
     }
   </script>
 </body>
